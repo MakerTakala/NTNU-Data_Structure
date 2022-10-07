@@ -1,2 +1,2 @@
 all:
-	g++ spare_matrix.cpp -o spare_martix
+	g++ -o matrix_calculatematrix_calculate_lib.cpp matrix_calculate.cpp

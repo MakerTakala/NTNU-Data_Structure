@@ -1,3 +1,5 @@
+// This is a file which collect all function and class in one
+
 #include <iostream>
 #include <stdlib.h>
 #include <algorithm>
