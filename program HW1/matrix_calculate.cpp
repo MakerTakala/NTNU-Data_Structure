@@ -1,6 +1,9 @@
 #include "matrix_calculate_lib.h"
 #include "sparse_matrix.h"
 
+sparse_matrix all_sparse_matrix[105];
+int64_t numbers_of_sparse_martix = 0;
+
 int main() {
     while(1) {
         int64_t choose;
@@ -11,7 +14,11 @@ int main() {
             string name;
             int64_t row, col, num;
             bool input_hash[101][101] = {{false}};
-            spare_matrix &cur_matrix = all_spare_matrix[numbers_of_spare_martix];
+            if(numbers_of_sparse_martix > 99) {
+                cout<<"This program only support 100 matrixs."<<endl;
+                wait();
+            }
+            sparse_matrix &cur_matrix = all_sparse_matrix[numbers_of_sparse_martix];
             while(1) {
                 cout<<"Please input martix name: ";
                 cin>>name;
@@ -67,17 +74,17 @@ int main() {
             }
             cur_matrix.sort_data();
             show_matrix(cur_matrix);
-            numbers_of_spare_martix++;
+            numbers_of_sparse_martix++;
         }
         else if(choose == 2) {
             if(matrix_amount_less(1) == false) continue;
-            spare_matrix cur_matrix = find_spare_matrix("display");
+            sparse_matrix cur_matrix = find_sparse_matrix("display");
             if(cur_matrix.size() == 0) continue;
             show_matrix(cur_matrix);
         }
         else if(choose == 3) {
             if(matrix_amount_less(1) == false) continue;
-            spare_matrix cur_matrix = find_spare_matrix("submatrix");
+            sparse_matrix cur_matrix = find_sparse_matrix("submatrix");
             if(cur_matrix.size() == 0) continue;
             int64_t row, col, rows[MAX_ROW + 1] = {0}, cols[MAX_COL + 1] = {0}, row_size = 0, col_size = 0;
             bool row_hash[MAX_ROW + 1] = {false}, col_hash[MAX_COL + 1] = {false};
@@ -141,25 +148,26 @@ int main() {
                 cols[col_size++] = col;
                 col_hash[col] = true;
             }
-            spare_matrix ans_matrix(cur_matrix.sub_matrix(rows, cols, row_size, col_size));
+            sparse_matrix ans_matrix(cur_matrix.sub_matrix(rows, cols, row_size, col_size));
+            if(ans_matrix.size() == 0) continue;
             show_matrix(ans_matrix);
-            save_matrix(ans_matrix);
+            if(numbers_of_sparse_martix <= 99) save_matrix(ans_matrix);
         }
         else if(choose == 4) {
             if(matrix_amount_less(1) == false) continue;
-            spare_matrix cur_matrix = find_spare_matrix("transpose matrix");
+            sparse_matrix cur_matrix = find_sparse_matrix("transpose matrix");
             if(cur_matrix.size() == 0) continue;
-            spare_matrix ans_matrix(cur_matrix.transpose());
+            sparse_matrix ans_matrix(cur_matrix.transpose());
             show_matrix(ans_matrix);
-            save_matrix(ans_matrix);
+            if(numbers_of_sparse_martix <= 99) save_matrix(ans_matrix);
         }
         else if(choose == 5) {
             if(matrix_amount_less(1) == false) continue;
-            spare_matrix ans_matrix;
+            sparse_matrix ans_matrix;
             while(1) {
-                spare_matrix first_matrix = find_spare_matrix("first product matrix");
+                sparse_matrix first_matrix = find_sparse_matrix("first product matrix");
                 if(first_matrix.size() == 0) break;
-                spare_matrix second_matrix = find_spare_matrix("second product matrix");
+                sparse_matrix second_matrix = find_sparse_matrix("second product matrix");
                 if(second_matrix.size() == 0) break;
                 ans_matrix = first_matrix.element_wise_product(second_matrix);
                 if(ans_matrix.size() == 0) {
@@ -172,15 +180,15 @@ int main() {
             }
             if(ans_matrix.size() == 0) continue;
             show_matrix(ans_matrix);
-            save_matrix(ans_matrix);
+            if(numbers_of_sparse_martix <= 99) save_matrix(ans_matrix);
         }
         else if(choose == 6) {
             if(matrix_amount_less(1) == false) continue;
-            spare_matrix ans_matrix;
+            sparse_matrix ans_matrix;
             while(1) {
-                spare_matrix first_matrix = find_spare_matrix("first multiplication matrix");
+                sparse_matrix first_matrix = find_sparse_matrix("first multiplication matrix");
                 if(first_matrix.size() == 0) break;
-                spare_matrix second_matrix = find_spare_matrix("second multiplication matrix");
+                sparse_matrix second_matrix = find_sparse_matrix("second multiplication matrix");
                 if(second_matrix.size() == 0) break;
                 ans_matrix = first_matrix.multiplication(second_matrix);
                 if(ans_matrix.size() == 0) {
@@ -193,13 +201,13 @@ int main() {
             }
             if(ans_matrix.size() == 0) continue;
             show_matrix(ans_matrix);
-            save_matrix(ans_matrix);
+            if(numbers_of_sparse_martix <= 99) save_matrix(ans_matrix);
         }
         else if(choose == 7) {
             if(matrix_amount_less(1) == false) continue;
-            spare_matrix ans_matrix;
+            sparse_matrix ans_matrix;
             while(1) {
-                spare_matrix cur_matrix = find_spare_matrix("square_multiplication");
+                sparse_matrix cur_matrix = find_sparse_matrix("square_multiplication");
                 if(cur_matrix.size() == 0) break;
                 int64_t times = 1;
                 while(1) {
@@ -226,7 +234,7 @@ int main() {
             }
             if(ans_matrix.size() == 0) continue;
             show_matrix(ans_matrix);
-            save_matrix(ans_matrix);
+            if(numbers_of_sparse_martix <= 99) save_matrix(ans_matrix);
         }
         else if(choose == 8) {
             cout<<"EXIT."<<endl;

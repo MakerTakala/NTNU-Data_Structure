@@ -1,5 +1,8 @@
 #include "matrix_calculate_lib.h"
 
+extern sparse_matrix all_sparse_matrix[100];
+extern int64_t numbers_of_sparse_martix;
+
 void print_line() {
     cout<<endl<<"---------------------------------------------------"<<endl;
 }
@@ -20,11 +23,11 @@ void hello() {
     cout<<"6. Matrix multiplication"<<endl;
     cout<<"7. square quickly multiplication"<<endl;
     cout<<"8. EXIT"<<endl;
-    cout<<"Please choose your operation with number(1-7): "; 
+    cout<<"Please choose your operation with number(1-8): "; 
 }
 
 bool matrix_amount_less(int64_t num) {
-    if(numbers_of_spare_martix < num) {
+    if(numbers_of_sparse_martix < num) {
         cout<<"Please add more new matrix first."<<endl;
         wait();
         return false;
@@ -32,7 +35,7 @@ bool matrix_amount_less(int64_t num) {
     return true;
 }
 
-void show_matrix(spare_matrix matrix) {
+void show_matrix(sparse_matrix matrix) {
     system("clear");
     cout<<matrix.name()<<":"<<endl;
     cout<<"    row: "<<matrix.row()<<endl;
@@ -59,32 +62,32 @@ void show_matrix(spare_matrix matrix) {
     print_line();
 }
 
-spare_matrix find_spare_matrix(string say) {
+sparse_matrix find_sparse_matrix(string say) {
     string name;
     while(1) {
         system("clear");
         cout<<"Matrix list:"<<endl;
-        for(int i = 0; i < numbers_of_spare_martix; i++) {
-            cout<<"    "<<all_spare_matrix[i].name()<<endl;
+        for(int i = 0; i < numbers_of_sparse_martix; i++) {
+            cout<<"    "<<all_sparse_matrix[i].name()<<endl;
         }
         cout<<endl<<"Please input matrix name for "<<say<<endl<<"(enter \"0\" will stop this operation): ";
         cin>>name;
         if(name == "0") break;;
-        for(int i = 0; i < numbers_of_spare_martix; i++) {
-            if(all_spare_matrix[i].name() == name) {
+        for(int i = 0; i < numbers_of_sparse_martix; i++) {
+            if(all_sparse_matrix[i].name() == name) {
                 system("clear");
                 cout<<name<<":"<<endl;
-                return all_spare_matrix[i];
+                return all_sparse_matrix[i];
             }
         }
         cout<<"Can't find correspond matrix name.";
     }
-    return spare_matrix();
+    return sparse_matrix();
 }
 
 bool check_same_name(string name) {
-    for(int i = 0; i < numbers_of_spare_martix; i++) {
-        if(all_spare_matrix[i].name() == name) {
+    for(int i = 0; i < numbers_of_sparse_martix; i++) {
+        if(all_sparse_matrix[i].name() == name) {
             cout<<"This name has been use."<<endl;
             wait();
             system("clear");
@@ -94,15 +97,15 @@ bool check_same_name(string name) {
     return false;
 }
 
-void save_matrix(spare_matrix matrix) {
+void save_matrix(sparse_matrix matrix) {
     string name;
     while(1) {
         cout<<"If you want to save this matrix, input 'Y' to save, or input 'N' to leave: ";
         cin.ignore();
         char c = getchar();
         if(c == 'Y') {
-            system("clear");
             while(1) {
+                system("clear");
                 show_matrix(matrix);
                 cout<<"Please enter matrix's name: ";
                 cin>>name;
@@ -110,12 +113,13 @@ void save_matrix(spare_matrix matrix) {
                 break;
             }
             matrix.set_name(name);
-            all_spare_matrix[numbers_of_spare_martix] = spare_matrix(matrix);
-            numbers_of_spare_martix++;
+            all_sparse_matrix[numbers_of_sparse_martix] = sparse_matrix(matrix);
+            numbers_of_sparse_martix++;
             show_matrix(matrix);
             cout<<"Matrix "<<name<<" has been saved."<<endl;
+            break;
         }
-        if(c == 'N') {
+        else if(c == 'N') {
             break;
         }
     }

@@ -7,15 +7,15 @@
 #include <cmath>
 using namespace std;
 
-#define MAX_ROW 100
-#define MAX_COL 100
+#define MAX_ROW 50
+#define MAX_COL 50
 #define MAX_ELEMENT 1000
 
 typedef struct {
     int64_t row, col, num;
 } element;
 
-class spare_matrix {
+class sparse_matrix {
 private:
     int64_t data_row;
     int64_t data_col;
@@ -56,7 +56,7 @@ public:
     string name() { return data_name; }
     ino64_t size() { return data_size; }
 
-    spare_matrix() {
+    sparse_matrix() {
         data_row = 0;
         data_col = 0;
         data_name = "";
@@ -68,19 +68,19 @@ public:
         }
     }
 
-    spare_matrix(const spare_matrix &copy_spare_matrix) {
-        data_row = copy_spare_matrix.data_row;
-        data_col = copy_spare_matrix.data_col;
-        data_name = copy_spare_matrix.data_name;
-        data_size = copy_spare_matrix.data_size;
+    sparse_matrix(const sparse_matrix &copy_sparse_matrix) {
+        data_row = copy_sparse_matrix.data_row;
+        data_col = copy_sparse_matrix.data_col;
+        data_name = copy_sparse_matrix.data_name;
+        data_size = copy_sparse_matrix.data_size;
         for(int i = 0; i < MAX_ELEMENT; i++) {
-            data[i].row = copy_spare_matrix.data[i].row;
-            data[i].col = copy_spare_matrix.data[i].col;
-            data[i].num = copy_spare_matrix.data[i].num;
+            data[i].row = copy_sparse_matrix.data[i].row;
+            data[i].col = copy_sparse_matrix.data[i].col;
+            data[i].num = copy_sparse_matrix.data[i].num;
         }
     }
     
-    spare_matrix(const int64_t row, const int64_t col, const string name) {
+    sparse_matrix(const int64_t row, const int64_t col, const string name) {
         data_row = row;
         data[0].row = row;
         data_col = col;
@@ -121,7 +121,7 @@ public:
         return 1;
     }
 
-    spare_matrix sort_data() {
+    sparse_matrix sort_data() {
         sort(data + 1, data + 1 + data_size, data_cmp);
         return *this;
     }
@@ -135,8 +135,8 @@ public:
         return MAX;
     }
 
-    spare_matrix sub_matrix(int64_t rows[], int64_t cols[], int64_t row_size, int64_t col_size) {
-        spare_matrix this_matrix(row_size, col_size, "Submatrix_" + this->name());
+    sparse_matrix sub_matrix(int64_t rows[], int64_t cols[], int64_t row_size, int64_t col_size) {
+        sparse_matrix this_matrix(row_size, col_size, "Submatrix_" + this->name());
         int64_t tmp_matrix[MAX_ROW + 1][MAX_COL + 1] = {{0}};
 
         for(int i = 1; i <= data_size; i++) {
@@ -147,8 +147,8 @@ public:
 
         for(int i = 0; i < row_size; i++) {
             for(int j = 0; j < col_size; j++) {
-                if(rows[i] <= 0 || data_row < rows[i] || cols[i] <= 0 || data_col < cols[i]) {
-                    return spare_matrix();
+                if(rows[i] <= 0 || data_row < rows[i] || cols[j] <= 0 || data_col < cols[j]) {
+                    return sparse_matrix();
                 }
                 if(tmp_matrix[rows[i]][cols[j]] != 0) {
                     this_matrix.set_data(i + 1, j + 1, tmp_matrix[rows[i]][cols[j]]);
@@ -158,8 +158,8 @@ public:
         return this_matrix;
     }
 
-    spare_matrix transpose() {
-        spare_matrix transpose_matrix(this->col(), this->row(), "Transpose_matrix_" + this->name());
+    sparse_matrix transpose() {
+        sparse_matrix transpose_matrix(this->col(), this->row(), "Transpose_matrix_" + this->name());
         transpose_matrix.data_size = this->data_size;
         transpose_matrix.data[0].num = this->data_size;
         
@@ -180,9 +180,9 @@ public:
         return transpose_matrix;
     }
 
-    spare_matrix element_wise_product(spare_matrix input_matrix) {
-        if(data_row != input_matrix.row() || data_col != input_matrix.col()) return spare_matrix();
-        spare_matrix product_matrix(data_row, data_col, "Element_wise_Product_matrix_" + this->name() + "X" + input_matrix.name());
+    sparse_matrix element_wise_product(sparse_matrix input_matrix) {
+        if(data_row != input_matrix.row() || data_col != input_matrix.col()) return sparse_matrix();
+        sparse_matrix product_matrix(data_row, data_col, "Element_wise_Product_matrix_" + this->name() + "X" + input_matrix.name());
         int64_t first_pointer = 1, second_pointer = 1; 
         while(first_pointer <= data_size && second_pointer <= input_matrix.size()) {
             if(data[first_pointer].row == input_matrix.data[second_pointer].row && data[first_pointer].col == input_matrix.data[second_pointer].col) {
@@ -208,9 +208,9 @@ public:
         return product_matrix;
     }
 
-    spare_matrix multiplication(spare_matrix input_matrix) {
-        if(data_col != input_matrix.row()) return spare_matrix();
-        spare_matrix outer_product_matrix(data_row, input_matrix.col(), "multiplication_matrix_" + this->name() + "X" + input_matrix.name());
+    sparse_matrix multiplication(sparse_matrix input_matrix) {
+        if(data_col != input_matrix.row()) return sparse_matrix();
+        sparse_matrix outer_product_matrix(data_row, input_matrix.col(), "multiplication_matrix_" + this->name() + "X" + input_matrix.name());
         
         input_matrix = input_matrix.transpose();
         int64_t a_idx = 1, b_idx = 1;
@@ -257,11 +257,11 @@ public:
         return outer_product_matrix;
     }
 
-    spare_matrix square_multiplication(int64_t times) {
-        if(data_row != data_col) return spare_matrix();
-        if(times == 1) return spare_matrix(*this);
-        spare_matrix exponentiation_matrix(square_multiplication(times / 2));
-        if(times & 1) return spare_matrix(*this).multiplication(exponentiation_matrix.multiplication(exponentiation_matrix));
+    sparse_matrix square_multiplication(int64_t times) {
+        if(data_row != data_col) return sparse_matrix();
+        if(times == 1) return sparse_matrix(*this);
+        sparse_matrix exponentiation_matrix(square_multiplication(times / 2));
+        if(times & 1) return sparse_matrix(*this).multiplication(exponentiation_matrix.multiplication(exponentiation_matrix));
         else return exponentiation_matrix.multiplication(exponentiation_matrix);
     }
 };
