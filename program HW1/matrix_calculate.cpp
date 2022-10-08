@@ -239,11 +239,13 @@ int main() {
         else if(choose == 8) {
             cout<<"EXIT."<<endl;
             wait();
+            system("clear");
             exit(0);
         }
         else {
             cout<<"EXIT."<<endl;
             wait();
+            system("clear");
             exit(0);
         }
         wait();
