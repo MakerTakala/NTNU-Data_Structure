@@ -246,4 +246,5 @@ int main() {
         }
         wait();
     }
+    wait();
 }
