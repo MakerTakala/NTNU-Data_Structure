@@ -11,7 +11,7 @@ int main() {
         cin>>choose;
         system("clear");
         if(choose == 1) {
-            string name;
+            char name[1024] = {0};
             int64_t row, col, num;
             bool input_hash[101][101] = {{false}};
             if(numbers_of_sparse_martix > 99) {
@@ -149,7 +149,7 @@ int main() {
                 col_hash[col] = true;
             }
             sparse_matrix ans_matrix(cur_matrix.sub_matrix(rows, cols, row_size, col_size));
-            if(ans_matrix.size() == 0) continue;
+            if(ans_matrix.row() == 0 && ans_matrix.col() == 0) continue;
             show_matrix(ans_matrix);
             if(numbers_of_sparse_martix <= 99) save_matrix(ans_matrix);
         }
@@ -170,7 +170,7 @@ int main() {
                 sparse_matrix second_matrix = find_sparse_matrix("second product matrix");
                 if(second_matrix.size() == 0) break;
                 ans_matrix = first_matrix.element_wise_product(second_matrix);
-                if(ans_matrix.size() == 0) {
+                if(ans_matrix.row() == 0 && ans_matrix.col() == 0) {
                     cout<<"You need to choose two matrixs with same row and column."<<endl;
                     wait();
                     system("clear");
@@ -178,7 +178,7 @@ int main() {
                 }
                 break;
             }
-            if(ans_matrix.size() == 0) continue;
+            if(ans_matrix.row() == 0 && ans_matrix.col() == 0) continue;
             show_matrix(ans_matrix);
             if(numbers_of_sparse_martix <= 99) save_matrix(ans_matrix);
         }
@@ -191,7 +191,7 @@ int main() {
                 sparse_matrix second_matrix = find_sparse_matrix("second multiplication matrix");
                 if(second_matrix.size() == 0) break;
                 ans_matrix = first_matrix.multiplication(second_matrix);
-                if(ans_matrix.size() == 0) {
+                if(ans_matrix.row() == 0 && ans_matrix.col() == 0) {
                     cout<<"You need to choose two matrixs with first matrix column euqal to second matrix row."<<endl;
                     wait();
                     system("clear");
@@ -199,7 +199,7 @@ int main() {
                 }
                 break;
             }
-            if(ans_matrix.size() == 0) continue;
+            if(ans_matrix.row() == 0 && ans_matrix.col() == 0) continue;
             show_matrix(ans_matrix);
             if(numbers_of_sparse_martix <= 99) save_matrix(ans_matrix);
         }
@@ -223,16 +223,18 @@ int main() {
                     break;
                 }
                 ans_matrix = cur_matrix.square_multiplication(times);
-                if(ans_matrix.size() == 0) {
+                if(ans_matrix.row() == 0 && ans_matrix.col() == 0) {
                     cout<<"Selected matrix is not square matrix"<<endl;
                     wait();
                     system("clear");
                     continue;
                 }
-                ans_matrix.set_name(cur_matrix.name() + "^" + to_string(times));
+                char tmp_name[1024] = {0};
+                sprintf(tmp_name, "%s^%lld", cur_matrix.name(), times);
+                ans_matrix.set_name(tmp_name);
                 break;
             }
-            if(ans_matrix.size() == 0) continue;
+            if(ans_matrix.row() == 0 && ans_matrix.col() == 0) continue;
             show_matrix(ans_matrix);
             if(numbers_of_sparse_martix <= 99) save_matrix(ans_matrix);
         }

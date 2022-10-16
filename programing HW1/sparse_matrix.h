@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <iomanip>
 #include <cmath>
+#include <string.h>
 using namespace std;
 
 #define MAX_ROW 50
@@ -19,13 +20,13 @@ class sparse_matrix {
 private:
     int64_t data_row;
     int64_t data_col;
-    string data_name;
+    char data_name[1024];
     
     int64_t data_size;
     element data[MAX_ELEMENT + 1];
 
-    void __set_name(string input_name) {
-        data_name = input_name;
+    void __set_name(char input_name[]) {
+        strcpy(data_name, input_name);
     }
     void __set_row(int64_t input_row) {
         data_row = input_row;
@@ -53,13 +54,13 @@ private:
 public:
     int64_t row() { return data_row; }
     int64_t col() { return data_col; }
-    string name() { return data_name; }
-    ino64_t size() { return data_size; }
+    char* name() { return data_name; }
+    int64_t size() { return data_size; }
 
     sparse_matrix() {
         data_row = 0;
         data_col = 0;
-        data_name = "";
+        memset(data_name, 0, 1024);
         data_size = 0;
         for(int i = 0; i < MAX_ELEMENT; i++) {
             data[i].row = 0;
@@ -71,7 +72,7 @@ public:
     sparse_matrix(const sparse_matrix &copy_sparse_matrix) {
         data_row = copy_sparse_matrix.data_row;
         data_col = copy_sparse_matrix.data_col;
-        data_name = copy_sparse_matrix.data_name;
+        strcpy(data_name, copy_sparse_matrix.data_name);
         data_size = copy_sparse_matrix.data_size;
         for(int i = 0; i < MAX_ELEMENT; i++) {
             data[i].row = copy_sparse_matrix.data[i].row;
@@ -80,14 +81,14 @@ public:
         }
     }
     
-    sparse_matrix(const int64_t row, const int64_t col, const string name) {
+    sparse_matrix(const int64_t row, const int64_t col, const char name[]) {
         data_row = row;
         data[0].row = row;
         data_col = col;
         data[0].col = col;
         data_size = 0;
         data[0].num = 0;
-        data_name = name;
+        strcpy(data_name, name);
         for(int i = 1; i < MAX_ELEMENT; i++) {
             data[i].row = 0;
             data[i].col = 0;
@@ -96,7 +97,7 @@ public:
         
     }
 
-    int set_name(string input_name) {
+    int set_name(char input_name[]) {
         __set_name(input_name);
         return 1;
     }
@@ -113,7 +114,7 @@ public:
         return 1;
     }
 
-    int set_data(int64_t input_row, int64_t  input_col, int64_t input_num) {
+    int set_data(int64_t input_row, int64_t input_col, int64_t input_num) {
         if(input_row <= 0 || data_row < input_row || input_col <= 0 || data_col < input_col) {
             return 0;
         }
@@ -136,7 +137,9 @@ public:
     }
 
     sparse_matrix sub_matrix(int64_t rows[], int64_t cols[], int64_t row_size, int64_t col_size) {
-        sparse_matrix this_matrix(row_size, col_size, "Submatrix_" + this->name());
+        char tmp_name[1024] = {0};
+        sprintf(tmp_name, "Submatrix_%s", this->name());
+        sparse_matrix this_matrix(row_size, col_size, tmp_name);
         int64_t tmp_matrix[MAX_ROW + 1][MAX_COL + 1] = {{0}};
 
         for(int i = 1; i <= data_size; i++) {
@@ -144,7 +147,6 @@ public:
         }
         sort(rows, rows + row_size);
         sort(cols, cols + col_size);
-
         for(int i = 0; i < row_size; i++) {
             for(int j = 0; j < col_size; j++) {
                 if(rows[i] <= 0 || data_row < rows[i] || cols[j] <= 0 || data_col < cols[j]) {
@@ -159,7 +161,9 @@ public:
     }
 
     sparse_matrix transpose() {
-        sparse_matrix transpose_matrix(this->col(), this->row(), "Transpose_matrix_" + this->name());
+        char tmp_name[1024] = {0};
+        sprintf(tmp_name, "Transpose_matrix_%s", this->name());
+        sparse_matrix transpose_matrix(this->col(), this->row(), tmp_name);
         transpose_matrix.data_size = this->data_size;
         transpose_matrix.data[0].num = this->data_size;
         
@@ -182,7 +186,9 @@ public:
 
     sparse_matrix element_wise_product(sparse_matrix input_matrix) {
         if(data_row != input_matrix.row() || data_col != input_matrix.col()) return sparse_matrix();
-        sparse_matrix product_matrix(data_row, data_col, "Element_wise_Product_matrix_" + this->name() + "X" + input_matrix.name());
+        char tmp_name[1024] = {0};
+        sprintf(tmp_name, "Element_wise_Product_matrix_%sX%s", this->name(), input_matrix.name());
+        sparse_matrix product_matrix(data_row, data_col, tmp_name);
         int64_t first_pointer = 1, second_pointer = 1; 
         while(first_pointer <= data_size && second_pointer <= input_matrix.size()) {
             if(data[first_pointer].row == input_matrix.data[second_pointer].row && data[first_pointer].col == input_matrix.data[second_pointer].col) {
@@ -210,7 +216,9 @@ public:
 
     sparse_matrix multiplication(sparse_matrix input_matrix) {
         if(data_col != input_matrix.row()) return sparse_matrix();
-        sparse_matrix outer_product_matrix(data_row, input_matrix.col(), "multiplication_matrix_" + this->name() + "X" + input_matrix.name());
+        char tmp_name[1024] = {0};
+        sprintf(tmp_name, "multiplication_matrix_%sX%s", this->name(), input_matrix.name());
+        sparse_matrix outer_product_matrix(data_row, input_matrix.col(), tmp_name);
         
         input_matrix = input_matrix.transpose();
         int64_t a_idx = 1, b_idx = 1;
@@ -219,19 +227,19 @@ public:
 
         while(a_idx <= data_size) {
             if(data[a_idx].col < input_matrix.data[b_idx].col) {
-                ++a_idx;
+                a_idx++;
             }
             else if(data[a_idx].col > input_matrix.data[b_idx].col) {
-                ++b_idx;
+                b_idx++;
             }
             else {
                 sum += data[a_idx].num * input_matrix.data[b_idx].num;
-                ++b_idx;
+                b_idx++;
             }
             
             if(data[a_idx].row != data[a_row_begin].row) {
                 a_idx = a_row_begin;
-                ++b_idx;
+                b_idx++;
             }
             
             if(input_matrix.data[b_idx].row != input_matrix.data[b_row_begin].row) {

@@ -42,7 +42,8 @@ void show_matrix(sparse_matrix matrix) {
     cout<<"    col: "<<matrix.col()<<endl;
     
     int64_t get_data[MAX_ROW + 1][MAX_COL + 1] = {{0}};
-    int64_t digit = (int64_t)log10(matrix.get_data(get_data)) + 2;
+    int64_t digit = matrix.get_data(get_data);
+    digit = log10(digit == 0 ? 1 : digit) + 2;
     cout<<endl;
     for(int i = 0; i <= digit ; i++) cout<<" ";
     cout<<"|";
@@ -62,8 +63,8 @@ void show_matrix(sparse_matrix matrix) {
     print_line();
 }
 
-sparse_matrix find_sparse_matrix(string say) {
-    string name;
+sparse_matrix find_sparse_matrix(const char say[]) {
+    char name[1024] = {0};
     while(1) {
         system("clear");
         cout<<"Matrix list:"<<endl;
@@ -72,9 +73,9 @@ sparse_matrix find_sparse_matrix(string say) {
         }
         cout<<endl<<"Please input matrix name for "<<say<<endl<<"(enter \"0\" will stop this operation): ";
         cin>>name;
-        if(name == "0") break;;
+        if(!strcmp(name, "0")) break;;
         for(int i = 0; i < numbers_of_sparse_martix; i++) {
-            if(all_sparse_matrix[i].name() == name) {
+            if(!strcmp(all_sparse_matrix[i].name(), name)) {
                 system("clear");
                 cout<<name<<":"<<endl;
                 return all_sparse_matrix[i];
@@ -85,9 +86,9 @@ sparse_matrix find_sparse_matrix(string say) {
     return sparse_matrix();
 }
 
-bool check_same_name(string name) {
+bool check_same_name(char name[]) {
     for(int i = 0; i < numbers_of_sparse_martix; i++) {
-        if(all_sparse_matrix[i].name() == name) {
+        if(!strcmp(all_sparse_matrix[i].name(), name)) {
             cout<<"This name has been use."<<endl;
             wait();
             system("clear");
@@ -97,11 +98,11 @@ bool check_same_name(string name) {
     return false;
 }
 
-void save_matrix(sparse_matrix matrix) {
-    string name;
+void save_matrix(sparse_matrix &matrix) {
+    char name[1024];
     while(1) {
         cout<<"If you want to save this matrix, input 'Y' to save, or input 'N' to leave: ";
-        cin.ignore();
+        fflush(stdin);
         char c = getchar();
         if(c == 'Y') {
             while(1) {
