@@ -17,9 +17,9 @@ Use
 or 
 `g++ -o matrix_calculate matrix_calculate_lib.cpp matrix_calculate.cpp` to compile all file, the excutable file name is "matrix_calculate".
 
-Please follow the instruction in terminal, I only support wrong input with number. If the program ask you to input nubmer, please input the number, or the program operations would be undefined, and you need to stop the program and restart it.
+Please follow the instruction in terminal, I only support wrong input with number. If the program ask you to input nubmer, please input the number, or the program operations would be undefined, and you need to stop the program and restart it. And, this matrix only support integer.
 
-This program support stort max 100 matrix.
+This program support store max 100 matrixs.
 
 This sparse matrix support 50\*50 matrix with 1000 element. However, I recommand use your matrix `row + column` less than 50.
 

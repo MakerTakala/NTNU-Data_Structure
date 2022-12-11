@@ -13,7 +13,7 @@ void print_line();
 void wait();
 void hello();
 bool matrix_amount_less(int64_t num);
-void show_matrix(sparse_matrix matrix);
+void show_matrix(sparse_matrix pol);
 sparse_matrix find_sparse_matrix(const char say[]);
 bool check_same_name(char name[]);
 void save_matrix(sparse_matrix &matrix);
