@@ -151,7 +151,7 @@ int main() {
             if(ss.fail()) break;
             untie_nodes_size++;
         }
-        cout<<(test_chain(untie_nodes, untie_nodes_size) ? "YES" : "NO")<<endl;;
+        cout<<(test_chain(untie_nodes, untie_nodes_size) ? "Yes" : "No")<<endl;;
 
 
         int conbiantion[30] = {0};
