@@ -1,6 +1,8 @@
 # include <iostream>
 #include <sstream>
 #include <string>
+#include <fstream>
+#include <limits>
 #include "list.h"
 using namespace std;
 
@@ -109,10 +111,13 @@ bool search_conbination(int target, int choose[], int size, int cur) {
 
 int main() {
     
+    fstream in;
+    in.open("test2.txt");
+
     //read ring connect situation
-    cin>>n>>m;
+    in>>n>>m;
     for(int i = 0, a, b; i < m; i++) {
-        cin>>a>>b;
+        in>>a>>b;
         if(a != b) {
             rings[a].push_back(b);
             rings[b].push_back(a);
@@ -135,8 +140,8 @@ int main() {
     int untie_nodes[30] = {0};
     int untie_nodes_size = 0;
     string untie_string;
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    getline(cin, untie_string);
+    in.ignore(numeric_limits<streamsize>::max(), '\n');
+    getline(in, untie_string);
     stringstream ss;
     ss<<untie_string;
     while(1) {
@@ -155,6 +160,7 @@ int main() {
         }
     }
 
+    in.close();
 
     return 0;
 }
