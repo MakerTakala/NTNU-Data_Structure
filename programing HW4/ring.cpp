@@ -112,51 +112,54 @@ bool search_conbination(int target, int choose[], int size, int cur) {
 int main() {
     
     fstream in;
-    in.open("test2.txt");
-
-    //read ring connect situation
-    in>>n>>m;
-    for(int i = 0, a, b; i < m; i++) {
-        in>>a>>b;
-        if(a != b) {
-            rings[a].push_back(b);
-            rings[b].push_back(a);
+    in.open("test.txt");
+    int t;
+    in>>t;
+    while(t--) {
+         //read ring connect situation
+        in>>n>>m;
+        for(int i = 0, a, b; i < m; i++) {
+            in>>a>>b;
+            if(a != b) {
+                rings[a].push_back(b);
+                rings[b].push_back(a);
+            }
         }
-    }
-    
-    //count the component
-    int conponent = 0;
-    fill(visited, visited + 30, 0);
-    for(int i = 1; i <= n; i++) {
-        if(visited[i] == 0) {
-            conponent++;
-            get_component_for_rings(i);
+        
+        //count the component
+        int conponent = 0;
+        fill(visited, visited + 30, 0);
+        for(int i = 1; i <= n; i++) {
+            if(visited[i] == 0) {
+                conponent++;
+                get_component_for_rings(i);
+            }
         }
-    }
-    cout<<conponent<<endl;
+        cout<<conponent<<endl;
 
 
-    //read untie rings
-    int untie_nodes[30] = {0};
-    int untie_nodes_size = 0;
-    string untie_string;
-    in.ignore(numeric_limits<streamsize>::max(), '\n');
-    getline(in, untie_string);
-    stringstream ss;
-    ss<<untie_string;
-    while(1) {
-        ss >> untie_nodes[untie_nodes_size];
-        if(ss.fail()) break;
-        untie_nodes_size++;
-    }
-    cout<<(test_chain(untie_nodes, untie_nodes_size) ? "YES" : "NO")<<endl;;
+        //read untie rings
+        int untie_nodes[30] = {0};
+        int untie_nodes_size = 0;
+        string untie_string;
+        in.ignore(numeric_limits<streamsize>::max(), '\n');
+        getline(in, untie_string);
+        stringstream ss;
+        ss<<untie_string;
+        while(1) {
+            ss >> untie_nodes[untie_nodes_size];
+            if(ss.fail()) break;
+            untie_nodes_size++;
+        }
+        cout<<(test_chain(untie_nodes, untie_nodes_size) ? "YES" : "NO")<<endl;;
 
 
-    int conbiantion[30] = {0};
-    for(int i = 1; i <= n; i++) {
-        if(search_conbination(i, conbiantion, 0, 0)) {
-            cout<<i<<endl;
-            break;
+        int conbiantion[30] = {0};
+        for(int i = 1; i <= n; i++) {
+            if(search_conbination(i, conbiantion, 0, 0)) {
+                cout<<i<<endl;
+                break;
+            }
         }
     }
 
